@@ -7,12 +7,12 @@ const isPalindrome = (string = '') => {
   let result = '';
 
   for(let i = newString.length - 1; i >= 0; i -= 1) {
-    let char = newString[i];
+    const char = newString[i];
     result += char;
   }
 
   return newString === result;
-}
+};
 
 isPalindrome('А роза упала на лапу азора');
 
@@ -21,13 +21,13 @@ const parseStringToInt = (string) => {
   let res = '';
   for (let i = 0; i < string.length; i += 1) {
     const parsed = parseInt(string[i], 10);
-    const isDigit = (!isNaN(parsed))
+    const isDigit = (!isNaN(parsed));
     if (isDigit) {
       res += parsed;
     }
   }
 
   return res ? +res : NaN;
-}
+};
 
 parseStringToInt('78 dogs');
