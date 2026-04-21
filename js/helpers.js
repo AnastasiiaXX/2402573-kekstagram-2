@@ -31,3 +31,12 @@ const parseStringToInt = (string) => {
 };
 
 parseStringToInt('78 dogs');
+
+export const getRandomInteger = (num1, num2) => {
+  const lower = Math.ceil(Math.min(num1, num2));
+  const upper = Math.floor(Math.max(num1, num2));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+export const getRandomElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
