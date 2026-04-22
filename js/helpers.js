@@ -40,3 +40,17 @@ export const getRandomInteger = (num1, num2) => {
 };
 
 export const getRandomElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
+
+const stringToMinutes = (string) => {
+  const [hours, minutes] = string.split(':').map((el) => parseInt(el, 10));
+  return hours * 60 + minutes;
+};
+
+export const checkWorkingTime = (workDayStart, workDayEnd, meetingStartTime, meetingDuration) => {
+  const workStart = stringToMinutes(workDayStart);
+  const workEnd = stringToMinutes(workDayEnd);
+  const meetingStart = stringToMinutes(meetingStartTime);
+  const meetingEnd = meetingStart + meetingDuration;
+
+  return meetingStart >= workStart && meetingEnd <= workEnd;
+};
