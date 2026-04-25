@@ -1,3 +1,4 @@
-import { createPhotos } from './generate-data';
+import { renderThumbnails } from './thumbnails.js';
 
-createPhotos();
+renderThumbnails();
+
