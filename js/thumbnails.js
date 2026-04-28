@@ -7,6 +7,8 @@ export const renderThumbnails = () => {
 
   const renderPhoto = (element) => {
     const newPhotoTemplate = photoTemplate.cloneNode(true);
+    const link = newPhotoTemplate.querySelector('a');
+    link.dataset.id = element.id;
     const image = newPhotoTemplate.querySelector('.picture__img');
     image.src = element.url;
     image.alt = element.description;

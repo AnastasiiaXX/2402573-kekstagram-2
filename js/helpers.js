@@ -54,3 +54,5 @@ export const checkWorkingTime = (workDayStart, workDayEnd, meetingStartTime, mee
 
   return meetingStart >= workStart && meetingEnd <= workEnd;
 };
+
+export const isEscapeKey = (evt) => evt.key === 'Escape';
