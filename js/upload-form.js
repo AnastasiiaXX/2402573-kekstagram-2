@@ -4,9 +4,11 @@ import { initImageScale, resetImageScale } from './image-scale.js';
 import { initImageEffects, resetImageEffects } from './image-filters.js';
 import { sendData } from './api.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
-  SENDING: 'Отправляю...'
+  SENDING: 'Публикую...'
 };
 
 const form = document.querySelector('.img-upload__form');
@@ -17,6 +19,7 @@ const uploadOverlay = form.querySelector('.img-upload__overlay');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
 const submitBtn = form.querySelector('.img-upload__submit');
+const preview = form.querySelector('.img-upload__preview img');
 
 const resetUploadForm = () => {
   closeModal(uploadOverlay, body);
@@ -33,6 +36,12 @@ const initUploadForm = () => {
 
   fileInput.addEventListener('change', () => {
     openModal(uploadOverlay, body);
+    const file = fileInput.files[0];
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      preview.src = URL.createObjectURL(file);
+    }
     resetImageEffects();
   });
 
