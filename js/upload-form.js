@@ -4,10 +4,13 @@ import { initImageScale, resetImageScale } from './image-scale.js';
 import { initImageEffects, resetImageEffects } from './image-filters.js';
 import { sendData } from './api.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
   SENDING: 'Отправляю...'
 };
+
 
 const form = document.querySelector('.img-upload__form');
 const fileInput = document.querySelector('.img-upload__input');
@@ -17,6 +20,8 @@ const uploadOverlay = form.querySelector('.img-upload__overlay');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
 const submitBtn = form.querySelector('.img-upload__submit');
+const preview = form.querySelector('.img-upload__preview img');
+const previewEffects = form.querySelectorAll('.effects__preview');
 
 const resetUploadForm = () => {
   closeModal(uploadOverlay, body);
@@ -32,12 +37,22 @@ const initUploadForm = () => {
   initImageEffects();
 
   fileInput.addEventListener('change', () => {
-    openModal(uploadOverlay, body);
+    openModal(uploadOverlay, body, resetUploadForm);
+    const file = fileInput.files[0];
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      const imageUrl = URL.createObjectURL(file);
+      preview.src = imageUrl;
+      previewEffects.forEach((previewEffect) => {
+        previewEffect.style.backgroundImage = `url(${imageUrl})`;
+      });
+    }
     resetImageEffects();
   });
 
   cancelBtn.addEventListener('click', () => {
-    resetUploadForm();
+    closeModal(uploadOverlay, body, resetUploadForm);
   });
 
   const stopEscPropagation = (evt) => {
@@ -49,11 +64,14 @@ const initUploadForm = () => {
   commentInput.addEventListener('keydown', stopEscPropagation);
 };
 
-const submitHandler = ({ onSuccess, onError }, formData) => {
-  if (!pristine.validate()) {
+const onSubmit = ({ onSuccess, onError }, formData) => {
+  const isValid = pristine.validate();
+
+  if (!isValid) {
     return;
   }
-  submitBtn.disabled = true;
+
+  submitBtn.setAttribute('disabled', 'disabled');
   submitBtn.textContent = SubmitButtonText.SENDING;
 
   sendData(formData)
@@ -64,7 +82,9 @@ const submitHandler = ({ onSuccess, onError }, formData) => {
       onError();
     })
     .finally(() => {
-      submitBtn.disabled = false;
+      // На Cypress v15 возможен ложный fail E2E-теста
+      // проверки блокировки submit-кнопки из-за изменений таймингов
+      submitBtn.removeAttribute('disabled');
       submitBtn.textContent = SubmitButtonText.IDLE;
     });
 };
@@ -72,9 +92,8 @@ const setUploadFormSubmit = ({ onSuccess, onError }) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
-    submitHandler({onSuccess, onError}, formData);
+    onSubmit({onSuccess, onError}, formData);
   });
 };
 
 export { initUploadForm, setUploadFormSubmit, resetUploadForm };
-

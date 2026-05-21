@@ -23,11 +23,12 @@ const showMessage = (templateId, buttonClass) => {
 
   const closeMessage = () => {
     messageDiv.remove();
-    document.removeEventListener('keydown', handleEscape);
+    document.removeEventListener('keydown', handleEscape, true);
     messageDiv.removeEventListener('click', handleOutsideClick);
   };
 
   handleEscape = (evt) => {
+    evt.stopPropagation();
     if (isEscapeKey(evt)) {
       closeMessage();
     }
@@ -39,7 +40,7 @@ const showMessage = (templateId, buttonClass) => {
     }
   };
   messageButton.addEventListener('click', closeMessage);
-  document.addEventListener('keydown', handleEscape);
+  document.addEventListener('keydown', handleEscape, true);
   messageDiv.addEventListener('click', handleOutsideClick);
 };
 
