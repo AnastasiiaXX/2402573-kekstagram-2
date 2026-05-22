@@ -1,18 +1,21 @@
 import { closeModal, openModal } from './modal.js';
-import { paginateComments } from './comments.js';
+import { COMMENTS_PER_PAGE, paginateComments } from './comments.js';
 
 const fullPhotoModal = document.querySelector('.big-picture');
 const body = document.querySelector('body');
-const closeModalButton = document.querySelector('.big-picture__cancel');
+const closeButton = document.querySelector('.big-picture__cancel');
 const comments = document.querySelector('.social__comments');
 const pictureContainer = document.querySelector('.pictures');
+const fullPhotoImage = document.querySelector('.big-picture__img img');
+const fullPhotoDescription = document.querySelector('.social__caption');
+const fullPhotoLikes = document.querySelector('.likes-count');
+const commentsCount = document.querySelector('.social__comment-total-count');
+const commentsLoader = document.querySelector('.comments-loader');
+const shownCommentsCount = document.querySelector('.social__comment-shown-count');
+
+let currentCommentsHandler = null;
 
 const fillPhotoData = (currentPhoto) => {
-  const fullPhotoImage = document.querySelector('.big-picture__img img');
-  const fullPhotoDescription = document.querySelector('.social__caption');
-  const fullPhotoLikes = document.querySelector('.likes-count');
-  const commentsCount = document.querySelector('.social__comment-total-count');
-
   fullPhotoImage.src = currentPhoto.url;
   fullPhotoImage.alt = currentPhoto.description;
   fullPhotoLikes.textContent = currentPhoto.likes;
@@ -22,10 +25,7 @@ const fillPhotoData = (currentPhoto) => {
 };
 
 export const showFullPhoto = (photos) => {
-  const commentsLoaderBtn = document.querySelector('.comments-loader');
-  const shownCommentsCount = document.querySelector('.social__comment-shown-count');
-
-  pictureContainer.addEventListener('click', (evt) => {
+  const onPictureContainerClick = (evt) => {
     const thumbnail = evt.target.closest('.picture');
     if (!thumbnail) {
       return;
@@ -36,16 +36,23 @@ export const showFullPhoto = (photos) => {
     const currentPhoto = photos.find((photo) => photo.id === photoId);
     fillPhotoData(currentPhoto);
 
-    commentsLoaderBtn.classList.toggle('hidden', currentPhoto.comments.length <= 5);
+    commentsLoader.classList.toggle('hidden', currentPhoto.comments.length <= COMMENTS_PER_PAGE);
     const pagination = paginateComments(currentPhoto.comments, comments);
     shownCommentsCount.textContent = pagination.getShownCount();
 
-    commentsLoaderBtn.onclick = () => {
+    const onCommentsLoaderClick = () => {
       pagination.loadMore();
       shownCommentsCount.textContent = pagination.getShownCount();
-      commentsLoaderBtn.classList.toggle('hidden', pagination.getShownCount() >= currentPhoto.comments.length);
+      commentsLoader.classList.toggle('hidden', pagination.getShownCount() >= currentPhoto.comments.length);
     };
-  });
-
-  closeModalButton.addEventListener('click', () => closeModal(fullPhotoModal, body));
+    if (currentCommentsHandler) {
+      commentsLoader.removeEventListener('click', currentCommentsHandler);
+      currentCommentsHandler = null;
+    }
+    currentCommentsHandler = onCommentsLoaderClick;
+    commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  };
+  pictureContainer.addEventListener('click', onPictureContainerClick);
+  const onCloseModalButtonClick = () => closeModal(fullPhotoModal, body);
+  closeButton.addEventListener('click', onCloseModalButtonClick);
 };

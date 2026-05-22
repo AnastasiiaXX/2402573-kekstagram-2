@@ -1,7 +1,6 @@
+const photoTemplate = document.querySelector('#picture').content;
+const photoContainer = document.querySelector('.pictures');
 export const renderThumbnails = (photos) => {
-  const photoTemplate = document.querySelector('#picture').content;
-  const photoContainer = document.querySelector('.pictures');
-
   const renderPhoto = (element) => {
     const newPhotoTemplate = photoTemplate.cloneNode(true);
     const link = newPhotoTemplate.querySelector('a');

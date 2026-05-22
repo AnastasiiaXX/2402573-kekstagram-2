@@ -4,14 +4,14 @@ const SCALE_STEP = 25;
 const PERCENT_DIVIDER = 100;
 
 const form = document.querySelector('.img-upload__form');
-const scaleSmallerBtn = form.querySelector('.scale__control--smaller');
-const scaleBiggerBtn = form.querySelector('.scale__control--bigger');
+const scaleSmaller = form.querySelector('.scale__control--smaller');
+const scaleBigger = form.querySelector('.scale__control--bigger');
 const scaleControlValue = form.querySelector('.scale__control--value');
 const uploadedImage = form.querySelector('.img-upload__preview img');
 
 let currentScale = MAX_SCALE;
 const initImageScale = () => {
-  scaleSmallerBtn.addEventListener('click', () => {
+  scaleSmaller.addEventListener('click', () => {
     if (currentScale > MIN_SCALE) {
       currentScale -= SCALE_STEP;
       scaleControlValue.value = `${currentScale}%`;
@@ -19,7 +19,7 @@ const initImageScale = () => {
     }
   });
 
-  scaleBiggerBtn.addEventListener('click', () => {
+  scaleBigger.addEventListener('click', () => {
     if (currentScale < MAX_SCALE) {
       currentScale += SCALE_STEP;
       scaleControlValue.value = `${currentScale}%`;

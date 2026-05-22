@@ -1,4 +1,4 @@
-const COMMENTS_PER_PAGE = 5;
+export const COMMENTS_PER_PAGE = 5;
 export const renderComments = (commentsData, container) => {
   commentsData.forEach((commentData) => {
     const comment = document.createElement('li');

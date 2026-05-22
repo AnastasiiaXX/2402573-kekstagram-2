@@ -13,35 +13,35 @@ const showDataError = () => {
   }, ERROR_SHOW_TIME);
 };
 const showMessage = (templateId, buttonClass) => {
-  let handleEscape = null;
-  let handleOutsideClick = null;
+  let onDocumentKeydown = null;
+  let onMessageDivClick = null;
 
   const template = document.querySelector(templateId).content.cloneNode(true);
   const messageDiv = template.firstElementChild;
   const messageButton = messageDiv.querySelector(buttonClass);
   body.append(template);
 
-  const closeMessage = () => {
+  const onMessageButtonClick = () => {
     messageDiv.remove();
-    document.removeEventListener('keydown', handleEscape, true);
-    messageDiv.removeEventListener('click', handleOutsideClick);
+    document.removeEventListener('keydown', onDocumentKeydown, true);
+    messageDiv.removeEventListener('click', onMessageDivClick);
   };
 
-  handleEscape = (evt) => {
+  onDocumentKeydown = (evt) => {
     evt.stopPropagation();
     if (isEscapeKey(evt)) {
-      closeMessage();
+      onMessageButtonClick();
     }
   };
 
-  handleOutsideClick = (evt) => {
+  onMessageDivClick = (evt) => {
     if (evt.target === messageDiv) {
-      closeMessage();
+      onMessageButtonClick();
     }
   };
-  messageButton.addEventListener('click', closeMessage);
-  document.addEventListener('keydown', handleEscape, true);
-  messageDiv.addEventListener('click', handleOutsideClick);
+  messageButton.addEventListener('click', onMessageButtonClick);
+  document.addEventListener('keydown', onDocumentKeydown, true);
+  messageDiv.addEventListener('click', onMessageDivClick);
 };
 
 const showSuccessMessage = () => showMessage('#success', '.success__button');
