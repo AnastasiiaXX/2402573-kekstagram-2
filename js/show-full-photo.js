@@ -1,5 +1,5 @@
 import { closeModal, openModal } from './modal.js';
-import { COMMENTS_PER_PAGE, paginateComments } from './comments.js';
+import { COMMENTS_PER_PAGE, initCommentsPagination, loadMoreComments } from './comments.js';
 
 const fullPhotoModal = document.querySelector('.big-picture');
 const body = document.querySelector('body');
@@ -37,14 +37,16 @@ export const showFullPhoto = (photos) => {
     fillPhotoData(currentPhoto);
 
     commentsLoader.classList.toggle('hidden', currentPhoto.comments.length <= COMMENTS_PER_PAGE);
-    const pagination = paginateComments(currentPhoto.comments, comments);
-    shownCommentsCount.textContent = pagination.getShownCount();
+
+    let currentIndex = initCommentsPagination(currentPhoto.comments, comments);
+    shownCommentsCount.textContent = comments.children.length;
 
     const onCommentsLoaderClick = () => {
-      pagination.loadMore();
-      shownCommentsCount.textContent = pagination.getShownCount();
-      commentsLoader.classList.toggle('hidden', pagination.getShownCount() >= currentPhoto.comments.length);
+      currentIndex = loadMoreComments(currentPhoto.comments, comments, currentIndex);
+      shownCommentsCount.textContent = comments.children.length;
+      commentsLoader.classList.toggle('hidden', comments.children.length >= currentPhoto.comments.length);
     };
+
     if (currentCommentsHandler) {
       commentsLoader.removeEventListener('click', currentCommentsHandler);
       currentCommentsHandler = null;

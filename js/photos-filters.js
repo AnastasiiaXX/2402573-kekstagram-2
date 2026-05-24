@@ -1,3 +1,5 @@
+const ACTIVE_FILTER_CLASS = 'img-filters__button--active';
+
 const filtersBlock = document.querySelector('.img-filters');
 const filterDefault = document.querySelector('#filter-default');
 const filterRandom = document.querySelector('#filter-random');
@@ -17,18 +19,18 @@ const toggleActiveBtn = (btnClicked, activeClass) => {
 };
 const initPhotosFiltering = (photos, onRender) => {
   const onFilterDefaultClick = () => {
-    toggleActiveBtn(filterDefault, 'img-filters__button--active');
+    toggleActiveBtn(filterDefault, ACTIVE_FILTER_CLASS);
     onRender(photos);
   };
 
   const onFilterRandomClick = () => {
-    toggleActiveBtn(filterRandom, 'img-filters__button--active');
+    toggleActiveBtn(filterRandom, ACTIVE_FILTER_CLASS);
     const randomPhotos = photos.slice().sort(() => 0.5 - Math.random()).slice(0, 10);
     onRender(randomPhotos);
   };
 
   const onFilterDiscussedClick = () => {
-    toggleActiveBtn(filterDiscussed, 'img-filters__button--active');
+    toggleActiveBtn(filterDiscussed, ACTIVE_FILTER_CLASS);
     const discussedPhotos = photos.slice().sort((a, b) => b.comments.length - a.comments.length);
     onRender(discussedPhotos);
   };

@@ -4,6 +4,7 @@ const ERROR_SHOW_TIME = 5000;
 
 const dataErrorTemplate = document.querySelector('#data-error');
 const body = document.querySelector('body');
+
 const showDataError = () => {
   const template = dataErrorTemplate.content.cloneNode(true);
   const errorDiv = template.firstElementChild;
@@ -12,36 +13,36 @@ const showDataError = () => {
     errorDiv.remove();
   }, ERROR_SHOW_TIME);
 };
-const showMessage = (templateId, buttonClass) => {
-  let onDocumentKeydown = null;
-  let onMessageDivClick = null;
 
+const showMessage = (templateId, buttonClass) => {
   const template = document.querySelector(templateId).content.cloneNode(true);
   const messageDiv = template.firstElementChild;
   const messageButton = messageDiv.querySelector(buttonClass);
   body.append(template);
 
-  const onMessageButtonClick = () => {
+  const closeMessage = () => {
     messageDiv.remove();
-    document.removeEventListener('keydown', onDocumentKeydown, true);
-    messageDiv.removeEventListener('click', onMessageDivClick);
+    document.removeEventListener('keydown', handleKeydown, true);
+    messageButton.removeEventListener('click', closeMessage);
+    messageDiv.removeEventListener('click', handleOverlayClick);
   };
 
-  onDocumentKeydown = (evt) => {
+  function handleKeydown(evt) {
     evt.stopPropagation();
     if (isEscapeKey(evt)) {
-      onMessageButtonClick();
+      closeMessage();
     }
-  };
+  }
 
-  onMessageDivClick = (evt) => {
+  function handleOverlayClick(evt) {
     if (evt.target === messageDiv) {
-      onMessageButtonClick();
+      closeMessage();
     }
-  };
-  messageButton.addEventListener('click', onMessageButtonClick);
-  document.addEventListener('keydown', onDocumentKeydown, true);
-  messageDiv.addEventListener('click', onMessageDivClick);
+  }
+
+  messageButton.addEventListener('click', closeMessage);
+  document.addEventListener('keydown', handleKeydown, true);
+  messageDiv.addEventListener('click', handleOverlayClick);
 };
 
 const showSuccessMessage = () => showMessage('#success', '.success__button');

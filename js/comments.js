@@ -1,5 +1,6 @@
-export const COMMENTS_PER_PAGE = 5;
-export const renderComments = (commentsData, container) => {
+const COMMENTS_PER_PAGE = 5;
+
+const renderComments = (commentsData, container) => {
   commentsData.forEach((commentData) => {
     const comment = document.createElement('li');
     const avatar = document.createElement('img');
@@ -14,24 +15,20 @@ export const renderComments = (commentsData, container) => {
     commentText.classList.add('social__text');
     commentText.textContent = commentData.message;
 
-    comment.append(avatar);
-    comment.append(commentText);
-
+    comment.append(avatar, commentText);
     container.append(comment);
   });
 };
 
-export const paginateComments = (comments, container) => {
-  const firstComments = comments.slice(0, COMMENTS_PER_PAGE);
-  let currentIndex = COMMENTS_PER_PAGE;
-  renderComments(firstComments, container);
-  const loadMoreComments = () => {
-    const nextCommentsChunk = comments.slice(currentIndex, currentIndex + COMMENTS_PER_PAGE);
-    renderComments(nextCommentsChunk, container);
-    currentIndex += COMMENTS_PER_PAGE;
-  };
-  return {
-    loadMore: loadMoreComments,
-    getShownCount: () => container.children.length
-  };
+const initCommentsPagination = (comments, container) => {
+  renderComments(comments.slice(0, COMMENTS_PER_PAGE), container);
+  return COMMENTS_PER_PAGE;
 };
+
+const loadMoreComments = (comments, container, currentIndex) => {
+  const nextChunk = comments.slice(currentIndex, currentIndex + COMMENTS_PER_PAGE);
+  renderComments(nextChunk, container);
+  return currentIndex + COMMENTS_PER_PAGE;
+};
+
+export { COMMENTS_PER_PAGE, loadMoreComments, initCommentsPagination };
