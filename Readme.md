@@ -2,6 +2,8 @@
 
 Учебный проект [HTML Academy](https://htmlacademy.ru/intensive/javascript): сервис просмотра фотографий на чистом JavaScript. Можно смотреть фотографии других пользователей, фильтровать их и загружать свои с обработкой.
 
+[Живая версия](https://anastasiixx.github.io/2402573-kekstagram-2/)
+
 ![Скриншот главной страницы](screenshots/main.jpg)
 
 ## Что реализовано
